@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🌸 Pink Tic-Tac-Toe Ultra Pro Max 🌸</title>
+    <style>
+        :root {
+            --pink-light: #ffebf0;
+            --pink-medium: #ffb8d1;
+            --pink-dark: #ff85a1;
+            --pink-darker: #ff6b8b;
+            --text-dark: #5a2a37;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: var(--pink-light);
+            color: var(--text-dark);
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10px 10px, var(--pink-medium) 1px, transparent 1px),
+                radial-gradient(circle at 20px 20px, var(--pink-dark) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        h1 {
+            color: var(--pink-darker);
+            text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.8);
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ff6b8b, #ffb8d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(255, 107, 139, 0.3);
+            border: 4px solid var(--pink-medium);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #ff6b8b, #ffb8d1, #ff6b8b);
+            z-index: -1;
+            border-radius: 30px;
+            opacity: 0.3;
+        }
+        
+        .username-section {
+            margin-bottom: 25px;
+        }
+        
+        input {
+            padding: 12px 20px;
+            border: 3px solid var(--pink-medium);
+            border-radius: 50px;
+            font-size: 1.1em;
+            margin: 8px;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--pink-light);
+        }
+        
+        input:focus {
+            border-color: var(--pink-darker);
+            box-shadow: 0 0 10px var(--pink-darker);
+        }
+        
+        button {
+            background: linear-gradient(to bottom, var(--pink-medium), var(--pink-dark));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 15px 8px;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 0 var(--pink-darker);
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 var(--pink-darker);
+        }
+        
+        button:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--pink-darker);
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px auto;
+            max-width: 320px;
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            background-color: white;
+            border: 3px solid var(--pink-medium);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cell::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+            z-index: 0;
+        }
+        
+        .cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        }
+        
+        .cell.x {
+            color: var(--pink-darker);
+            text-shadow: 0 0 15px rgba(255, 107, 139, 0.5);
+        }
+        
+        .cell.o {
+            color: #9b59b6;
+            text-shadow: 0 0 15px rgba(155, 89, 182, 0.5);
+        }
+        
+        .status {
+            font-size: 1.5em;
+            margin: 25px 0;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--pink-light);
+            padding: 20px;
+            border-radius: 20px;
+            border: 3px dashed var(--pink-medium);
+            position: relative;
+        }
+        
+        .status::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid white;
+            border-radius: 20px;
+            pointer-events: none;
+        }
+        
+        .winner-message {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--pink-darker);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin: 25px 0;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .loser-message {
+            font-size: 1.3em;
+            color: #888;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .player-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            background-color: var(--pink-light);
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px solid var(--pink-medium);
+        }
+        
+        .player {
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .player::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
+            z-index: 0;
+        }
+        
+        .player-you {
+            background: linear-gradient(to right, var(--pink-light), var(--pink-medium));
+            border: 3px solid var(--pink-darker);
+        }
+        
+        .player-bot {
+            background: linear-gradient(to right, #f0e6ff, #d9b3ff);
+            border: 3px solid #9b59b6;
+        }
+        
+        .current-turn {
+            animation: glow 1.5s infinite alternate;
+            box-shadow: 0 0 20px rgba(255, 107, 139, 0.6);
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 15px rgba(255, 107, 139, 0.5);
+            }
+            to {
+                box-shadow: 0 0 25px rgba(255, 107, 139, 0.8);
+            }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: fall 5s linear forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .hearts {
+            position: absolute;
+            font-size: 1.5em;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        .difficulty-selector {
+            margin: 20px 0;
+        }
+        
+        .difficulty-btn {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: var(--pink-light);
+            border: 2px solid var(--pink-medium);
+            color: var(--text-dark);
+        }
+        
+        .difficulty-btn.active {
+            background-color: var(--pink-medium);
+            color: white;
+            border-color: var(--pink-darker);
+        }
+        
+        .credits {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 16px;
+            color: var(--pink-darker);
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid var(--pink-medium);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌸 Pink Tic-Tac-Toe Ultra Pro Max 🌸</h1>
+        
+        <div id="usernameSection" class="username-section">
+            <h2>Enter Your Cute Name</h2>
+            <input type="text" id="usernameInput" placeholder="Your adorable name">
+            <button id="setUsername">Let's Play! 💖</button>
+        </div>
+        
+        <div id="gameSetup" class="hidden">
+            <div class="difficulty-selector">
+                <h3>Choose Difficulty:</h3>
+                <button class="difficulty-btn active" data-difficulty="easy">Easy 🌸</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium 💐</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard 🌹</button>
+            </div>
+            <button id="startGame">Start Game ✨</button>
+        </div>
+        
+        <div id="playerInfo" class="player-info hidden">
+            <div id="playerYou" class="player player-you">
+                You (X): <span id="playerName">Player</span>
+            </div>
+            <div id="playerBot" class="player player-bot">
+                Bot (O): <span>Ultra Pro Max</span>
+            </div>
+        </div>
+        
+        <div id="gameBoard" class="hidden">
+            <div class="status" id="status">Your turn! Make a move!</div>
+            
+            <div id="winnerSection" class="hidden">
+                <div class="winner-message" id="winnerMessage"></div>
+                <div class="loser-message" id="loserMessage"></div>
+            </div>
+            
+            <div class="board" id="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            
+            <button id="reset">Play Again 💫</button>
+        </div>
+    </div>
+
+    <div class="credits">Made by Ajith</div>
+
+    <script>
+        // Game variables
+        let gameState = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = 'X'; // Player is X, Bot is O
+        let gameActive = true;
+        let username = '';
+        let difficulty = 'easy';
+        const winningConditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+            [0, 4, 8], [2, 4, 6]             // diagonals
+        ];
+        
+        // DOM elements
+        const usernameSection = document.getElementById('usernameSection');
+        const usernameInput = document.getElementById('usernameInput');
+        const setUsernameBtn = document.getElementById('setUsername');
+        const gameSetup = document.getElementById('gameSetup');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        const startGameBtn = document.getElementById('startGame');
+        const playerInfo = document.getElementById('playerInfo');
+        const playerName = document.getElementById('playerName');
+        const playerYou = document.getElementById('playerYou');
+        const playerBot = document.getElementById('playerBot');
+        const gameBoard = document.getElementById('gameBoard');
+        const cells = document.querySelectorAll('.cell');
+        const statusDisplay = document.getElementById('status');
+        const winnerSection = document.getElementById('winnerSection');
+        const winnerMessage = document.getElementById('winnerMessage');
+        const loserMessage = document.getElementById('loserMessage');
+        const resetButton = document.getElementById('reset');
+        
+        // Set username
+        setUsernameBtn.addEventListener('click', () => {
+            username = usernameInput.value.trim() || 'Cutie' + Math.floor(Math.random() * 1000);
+            usernameSection.classList.add('hidden');
+            gameSetup.classList.remove('hidden');
+            playerName.textContent = username;
+        });
+        
+        // Set difficulty
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                difficulty = btn.dataset.difficulty;
+                
+                // Update bot name based on difficulty
+                const botNameSpan = playerBot.querySelector('span');
+                if (difficulty === 'easy') botNameSpan.textContent = 'Fluffy Bot';
+                else if (difficulty === 'medium') botNameSpan.textContent = 'Pro Bot';
+                else botNameSpan.textContent = 'Ultra Pro Max Bot';
+            });
+        });
+        
+        // Start game
+        startGameBtn.addEventListener('click', startGame);
+        
+        // Game board interactions
+        resetButton.addEventListener('click', resetGame);
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+        
+        function startGame() {
+            gameSetup.classList.add('hidden');
+            playerInfo.classList.remove('hidden');
+            gameBoard.classList.remove('hidden');
+            updatePlayerTurnDisplay('X');
+            gameActive = true;
+        }
+        
+        function handleCellClick(e) {
+            if (!gameActive) return;
+            
+            const clickedCell = e.target;
+            const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+            
+            // Check if it's the player's turn and the cell is empty
+            if (currentPlayer !== 'X' || gameState[clickedCellIndex] !== '') return;
+            
+            // Make player move
+            makeMove(clickedCellIndex, 'X');
+            
+            // Check for win/draw
+            if (checkResult()) return;
+            
+            // Bot's turn
+            if (gameActive) {
+                setTimeout(() => {
+                    makeBotMove();
+                    checkResult();
+                }, 800);
+            }
+        }
+        
+        function makeMove(index, player) {
+            gameState[index] = player;
+            cells[index].textContent = player;
+            cells[index].classList.add(player.toLowerCase());
+            currentPlayer = player === 'X' ? 'O' : 'X';
+            updatePlayerTurnDisplay(currentPlayer);
+        }
+        
+        function makeBotMove() {
+            if (!gameActive) return;
+            
+            let move;
+            
+            // Different strategies based on difficulty
+            if (difficulty === 'easy') {
+                // Easy - random moves
+                move = getRandomMove();
+            } else if (difficulty === 'medium') {
+                // Medium - sometimes blocks or wins, sometimes random
+                if (Math.random() > 0.5) {
+                    move = findWinningMove('O') || findWinningMove('X') || getRandomMove();
+                } else {
+                    move = getRandomMove();
+                }
+            } else {
+                // Hard - always tries to win or block
+                move = findWinningMove('O') || findWinningMove('X') || getStrategicMove();
+            }
+            
+            makeMove(move, 'O');
+        }
+        
+        function getRandomMove() {
+            const emptyCells = gameState.map((cell, index) => cell === '' ? index : null).filter(val => val !== null);
+            return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        }
+        
+        function findWinningMove(player) {
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                // Check if two in a row with one empty
+                if (gameState[a] === player && gameState[b] === player && gameState[c] === '') return c;
+                if (gameState[a] === player && gameState[c] === player && gameState[b] === '') return b;
+                if (gameState[b] === player && gameState[c] === player && gameState[a] === '') return a;
+            }
+            return null;
+        }
+        
+        function getStrategicMove() {
+            // Prefer center, then corners, then edges
+            if (gameState[4] === '') return 4;
+            
+            const corners = [0, 2, 6, 8].filter(index => gameState[index] === '');
+            if (corners.length > 0) return corners[Math.floor(Math.random() * corners.length)];
+            
+            const edges = [1, 3, 5, 7].filter(index => gameState[index] === '');
+            if (edges.length > 0) return edges[Math.floor(Math.random() * edges.length)];
+            
+            return getRandomMove(); // fallback
+        }
+        
+        function checkResult() {
+            let roundWon = false;
+            let winner = null;
+            
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                if (gameState[a] === '' || gameState[b] === '' || gameState[c] === '') continue;
+                
+                if (gameState[a] === gameState[b] && gameState[b] === gameState[c]) {
+                    roundWon = true;
+                    winner = gameState[a];
+                    break;
+                }
+            }
+            
+            if (roundWon) {
+                gameActive = false;
+                winnerSection.classList.remove('hidden');
+                
+                if (winner === 'X') {
+                    winnerMessage.textContent = `🏆 ${username}, you're a LEGEND! Ultra Pro Max Win! 🏆`;
+                    loserMessage.textContent = "The bot didn't stand a chance against your skills!";
+                    createConfetti();
+                    createHearts(30);
+                } else {
+                    winnerMessage.textContent = `😭 ${username}, you lost to a ${difficulty} bot! 😭`;
+                    loserMessage.textContent = "Better luck next time! (or practice more)";
+                }
+                
+                return true;
+            }
+            
+            if (!gameState.includes('')) {
+                gameActive = false;
+                winnerSection.classList.remove('hidden');
+                winnerMessage.textContent = "✨ It's a Draw! ✨";
+                loserMessage.textContent = "You and the bot are equally matched!";
+                createHearts(15);
+                return true;
+            }
+            
+            return false;
+        }
+        
+        function updatePlayerTurnDisplay(turn) {
+            if (turn === 'X') {
+                playerYou.classList.add('current-turn');
+                playerBot.classList.remove('current-turn');
+                statusDisplay.textContent = `${username}'s turn (X)`;
+            } else {
+                playerBot.classList.add('current-turn');
+                playerYou.classList.remove('current-turn');
+                statusDisplay.textContent = "Bot is thinking...";
+            }
+        }
+        
+        function resetGame() {
+            gameState = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            gameActive = true;
+            
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.className = 'cell';
+            });
+            
+            winnerSection.classList.add('hidden');
+            updatePlayerTurnDisplay('X');
+        }
+        
+        function createConfetti() {
+            const colors = ['#ff6b8b', '#ffb8d1', '#ffd6e0', '#9b59b6', '#ff85a1', '#ff9bb3'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 12 + 8 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        function createHearts(count) {
+            const heartSymbols = ['💖', '🌸', '💐', '🌷', '🌹', '🥀', '🌺', '🌻', '🌼', '💮'];
+            
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'hearts';
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.fontSize = (Math.random() * 2 + 1) + 'em';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
